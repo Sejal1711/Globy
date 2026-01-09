@@ -1,0 +1,59 @@
+# =========================
+# Python cache
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# =========================
+# Virtual Environment
+# =========================
+venv/
+env/
+.venv/
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+*.env
+
+# =========================
+# FAISS / Vector DB (generated)
+# =========================
+faiss_index/index.faiss
+faiss_index/metadata.pkl
+
+# =========================
+# Uploaded images / user data
+# =========================
+images/uploaded/
+*.jpg
+*.jpeg
+*.png
+*.webp
+
+# =========================
+# Logs
+# =========================
+*.log
+uvicorn.log
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDEs
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Jupyter
+# =========================
+.ipynb_checkpoints/
