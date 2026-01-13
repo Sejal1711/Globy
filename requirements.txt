@@ -5,3 +5,6 @@ pillow
 torch
 torchvision
 transformers
+sqlalchemy
+psycopg2-binary
+python-dotenv

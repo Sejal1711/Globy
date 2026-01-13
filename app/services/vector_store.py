@@ -1,38 +1,50 @@
+from app.db.database import SessionLocal
+from app.models.metadata import Photo
 import faiss
 import numpy as np
 import os
-import pickle
 
-DIMENSION = 384 
+DIMENSION = 384
 INDEX_DIR = "faiss_index"
 INDEX_PATH = os.path.join(INDEX_DIR, "index.faiss")
-META_PATH = os.path.join(INDEX_DIR, "metadata.pkl")
 BASE_URL = "https://myserver.com/static/images/"
-# Ensure the directory exists
+
 os.makedirs(INDEX_DIR, exist_ok=True)
 
 # Load or create FAISS index
 if os.path.exists(INDEX_PATH):
     index = faiss.read_index(INDEX_PATH)
-    if os.path.exists(META_PATH):
-        with open(META_PATH, "rb") as f:
-            metadata = pickle.load(f)
-    else:
-        metadata = []
 else:
     index = faiss.IndexFlatL2(DIMENSION)
-    metadata = []
 
-def add_vector(vector: np.ndarray, image_path: str):
+def add_vector(vector: np.ndarray, image_path: str, caption: str):
     index.add(vector.reshape(1, -1))
-    metadata.append(image_path)
+    faiss_id = index.ntotal - 1
 
-    # Save index and metadata
+    image_url = BASE_URL + os.path.basename(image_path)
+
+    # SQLAlchemy session
+    session = SessionLocal()
+    photo = Photo(
+        faiss_id=faiss_id,
+        image_path=image_path,
+        image_url=image_url,
+        caption=caption
+    )
+    session.add(photo)
+    session.commit()
+    session.close()
+
     faiss.write_index(index, INDEX_PATH)
-    with open(META_PATH, "wb") as f:
-        pickle.dump(metadata, f)
 
 def search_vector(query_vector: np.ndarray, top_k=5):
     distances, indices = index.search(query_vector.reshape(1, -1), top_k)
-    results = [BASE_URL + os.path.basename(metadata[i]) for i in indices[0] if i < len(metadata)]
+    results = []
+
+    session = SessionLocal()
+    for faiss_id in indices[0]:
+        photo = session.query(Photo).filter(Photo.faiss_id == int(faiss_id)).first()
+        if photo:
+            results.append(photo.image_url)
+    session.close()
     return results
