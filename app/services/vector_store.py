@@ -7,7 +7,7 @@ import os
 DIMENSION = 384
 INDEX_DIR = "faiss_index"
 INDEX_PATH = os.path.join(INDEX_DIR, "index.faiss")
-BASE_URL = "https://myserver.com/static/images/"
+BASE_URL = "http://127.0.0.1:8000/static/images/"
 
 os.makedirs(INDEX_DIR, exist_ok=True)
 

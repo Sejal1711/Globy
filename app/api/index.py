@@ -18,5 +18,6 @@ async def index_photo(image: UploadFile = File(...)):
     return {
         "message": "Image indexed successfully",
         "filename": data["filename"],
-        "caption": caption
+        "caption": caption,
+        "image_url": f"http://127.0.0.1:8000/static/images/{data['filename']}"
     }
