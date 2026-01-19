@@ -11,11 +11,15 @@ app = FastAPI(
 # 🔥 CORS (REQUIRED for React)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # React dev server
+    allow_origins=[
+        "http://localhost:3000",  # Next.js dev server
+        "http://localhost:5173",  # (optional) Vite dev server
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Routers
 app.include_router(index.router, prefix="/api")

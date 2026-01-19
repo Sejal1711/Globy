@@ -8,18 +8,34 @@ router = APIRouter()
 def search_images(query: str = Query(..., min_length=1, description="Search query text")):
     """
     Search indexed images based on a text query.
+    Returns JSON:
+    {
+        "query": "...",
+        "results": [
+            {"uuid": "...", "image_url": "...", "caption": "..."},
+            ...
+        ]
+    }
     """
     try:
         query_embedding = get_text_embedding(query)
         results = search_vector(query_embedding, top_k=5)
 
-        print("Search results:", results)  # ✅ this will now run
+        # Convert UUIDs to strings (JSON serializable)
+        serializable_results = [
+            {
+                "uuid": str(r["uuid"]),
+                "image_url": r["image_url"],
+                "caption": r["caption"]
+            } for r in results
+        ]
+
+        print("Search results:", serializable_results)
 
         return {
             "query": query,
-            "results": results
+            "results": serializable_results
         }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error searching images: {str(e)}")
-
