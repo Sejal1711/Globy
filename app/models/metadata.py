@@ -6,6 +6,7 @@ class Photo(Base):
     __tablename__ = "photos"
 
     id = Column(Integer, primary_key=True, index=True)
+    uuid = Column(String, unique=True, index=True, nullable=False)
     faiss_id = Column(Integer, unique=True, index=True)
     image_path = Column(String, nullable=False)
     image_url = Column(String, nullable=False)

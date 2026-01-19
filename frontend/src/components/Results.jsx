@@ -71,64 +71,65 @@ export default function Results({ images }) {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {images.map((url, i) => (
-            <div
-              key={i}
-              className="group relative aspect-square bg-gray-100 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
-            >
-              {/* Loading skeleton */}
-              {!loadedImages[i] && !errorImages[i] && (
-                <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-              )}
+         {images.map((item, i) => (
+  <div
+    key={item.uuid || i}
+    className="group relative aspect-square bg-gray-100 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
+  >
+    {/* Loading skeleton */}
+    {!loadedImages[i] && !errorImages[i] && (
+      <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+    )}
 
-              {/* Error state */}
-              {errorImages[i] ? (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-                  <div className="text-center">
-                    <Image className="w-12 h-12 mx-auto text-gray-300 mb-2" />
-                    <p className="text-xs text-gray-400">Failed to load</p>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  {/* Image */}
-                  <img
-                    src={url}
-                    alt={`Result ${i + 1}`}
-                    className="w-full h-full object-cover cursor-pointer group-hover:scale-110 transition-transform duration-300"
-                    onLoad={() => handleImageLoad(i)}
-                    onError={() => handleImageError(i)}
-                    onClick={() => openLightbox(url, i)}
-                    loading="lazy"
-                  />
+    {/* Error state */}
+    {errorImages[i] ? (
+      <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <Image className="w-12 h-12 mx-auto text-gray-300 mb-2" />
+          <p className="text-xs text-gray-400">Failed to load</p>
+        </div>
+      </div>
+    ) : (
+      <>
+        {/* Image */}
+        <img
+          src={item.image_url} // ✅ Use image_url
+          alt={item.caption}    // ✅ Use caption
+          className="w-full h-full object-cover cursor-pointer group-hover:scale-110 transition-transform duration-300"
+          onLoad={() => handleImageLoad(i)}
+          onError={() => handleImageError(i)}
+          onClick={() => openLightbox(item.image_url, i)}
+          loading="lazy"
+        />
 
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openLightbox(url, i);
-                      }}
-                      className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors"
-                      aria-label="View full size"
-                    >
-                      <Maximize2 className="w-5 h-5 text-gray-700" />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDownload(url, i);
-                      }}
-                      className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors"
-                      aria-label="Download image"
-                    >
-                      <Download className="w-5 h-5 text-gray-700" />
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          ))}
+        {/* Hover overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              openLightbox(item.image_url, i);
+            }}
+            className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors"
+            aria-label="View full size"
+          >
+            <Maximize2 className="w-5 h-5 text-gray-700" />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDownload(item.image_url, i);
+            }}
+            className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors"
+            aria-label="Download image"
+          >
+            <Download className="w-5 h-5 text-gray-700" />
+          </button>
+        </div>
+      </>
+    )}
+  </div>
+))}
+
         </div>
       </div>
 

@@ -17,15 +17,15 @@ if os.path.exists(INDEX_PATH):
 else:
     index = faiss.IndexFlatL2(DIMENSION)
 
-def add_vector(vector: np.ndarray, image_path: str, caption: str):
+def add_vector(vector: np.ndarray, image_uuid: str, image_path: str, caption: str):
     index.add(vector.reshape(1, -1))
     faiss_id = index.ntotal - 1
 
     image_url = BASE_URL + os.path.basename(image_path)
 
-    # SQLAlchemy session
     session = SessionLocal()
     photo = Photo(
+        uuid=image_uuid,
         faiss_id=faiss_id,
         image_path=image_path,
         image_url=image_url,
@@ -37,6 +37,12 @@ def add_vector(vector: np.ndarray, image_path: str, caption: str):
 
     faiss.write_index(index, INDEX_PATH)
 
+    index.add(vector.reshape(1, -1))
+    faiss_id = index.ntotal - 1
+
+    image_url = BASE_URL + os.path.basename(image_path)
+
+
 def search_vector(query_vector: np.ndarray, top_k=5):
     distances, indices = index.search(query_vector.reshape(1, -1), top_k)
     results = []
@@ -45,6 +51,10 @@ def search_vector(query_vector: np.ndarray, top_k=5):
     for faiss_id in indices[0]:
         photo = session.query(Photo).filter(Photo.faiss_id == int(faiss_id)).first()
         if photo:
-            results.append(photo.image_url)
+            results.append({
+                "uuid": photo.uuid,
+                "image_url": photo.image_url,
+                "caption": photo.caption
+            })
     session.close()
     return results
