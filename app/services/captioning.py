@@ -1,5 +1,7 @@
 from transformers import BlipProcessor, BlipForConditionalGeneration
 from PIL import Image
+import requests
+from io import BytesIO
 import torch
 from app.services.embedding import get_text_embedding
 from app.services.vector_store import add_vector
@@ -12,16 +14,16 @@ model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-capt
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model.to(device)
 
-# captioning.py
-def generate_caption_and_store(image_path: str, image_uuid: str) -> str:
-    image = Image.open(image_path).convert("RGB")
+def generate_caption_and_store(image_url: str, image_uuid: str) -> str:
+    response = requests.get(image_url)
+    image = Image.open(BytesIO(response.content)).convert("RGB")
+
     inputs = processor(image, return_tensors="pt").to(device)
     output = model.generate(**inputs, max_length=50)
     caption = processor.decode(output[0], skip_special_tokens=True)
 
-    # This is where the DB insertion happens
     embedding = get_text_embedding(caption)
-    add_vector(embedding, image_uuid, image_path, caption)
+    add_vector(embedding, image_uuid, image_url, caption)
 
     return caption
 

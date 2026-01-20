@@ -1,5 +1,5 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from app.services.image_store import save_image
+
 from app.services.captioning import generate_caption_and_store
 
 router = APIRouter()

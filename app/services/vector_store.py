@@ -17,17 +17,15 @@ if os.path.exists(INDEX_PATH):
 else:
     index = faiss.IndexFlatL2(DIMENSION)
 
-def add_vector(vector: np.ndarray, image_uuid: str, image_path: str, caption: str):
+def add_vector(vector: np.ndarray, image_uuid: str, image_url: str, caption: str):
     index.add(vector.reshape(1, -1))
     faiss_id = index.ntotal - 1
-
-    image_url = BASE_URL + os.path.basename(image_path)
 
     session = SessionLocal()
     photo = Photo(
         uuid=image_uuid,
         faiss_id=faiss_id,
-        image_path=image_path,
+        image_path=image_url,   # store URL here if you want
         image_url=image_url,
         caption=caption
     )
@@ -36,12 +34,6 @@ def add_vector(vector: np.ndarray, image_uuid: str, image_path: str, caption: st
     session.close()
 
     faiss.write_index(index, INDEX_PATH)
-
-    index.add(vector.reshape(1, -1))
-    faiss_id = index.ntotal - 1
-
-    image_url = BASE_URL + os.path.basename(image_path)
-
 
 def search_vector(query_vector: np.ndarray, top_k=5):
     distances, indices = index.search(query_vector.reshape(1, -1), top_k)

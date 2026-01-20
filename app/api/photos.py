@@ -1,0 +1,21 @@
+import uuid
+from fastapi import APIRouter
+from pydantic import BaseModel
+from app.services.captioning import generate_caption_and_store
+
+router = APIRouter()
+
+class PhotoUpload(BaseModel):
+    image_url: str  # only field from client
+
+@router.post("/photos/upload")
+def upload_photo(data: PhotoUpload):
+    # ✅ 4 spaces indentation inside function
+    image_uuid = str(uuid.uuid4())
+    caption = generate_caption_and_store(data.image_url, image_uuid)
+
+    return {
+        "uuid": image_uuid,
+        "caption": caption,
+        "image_url": data.image_url
+    }

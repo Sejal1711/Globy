@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from app.api import index, search
+from app.api import index, search, photos
 
 app = FastAPI(
     title="Semantic Photo Search API",
@@ -24,7 +24,7 @@ app.add_middleware(
 # Routers
 app.include_router(index.router, prefix="/api")
 app.include_router(search.router, prefix="/api")
-
+app.include_router(photos.router, prefix="/api")
 # Health check
 @app.get("/")
 def health_check():
