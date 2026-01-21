@@ -6,11 +6,10 @@ from app.services.captioning import generate_caption_and_store
 router = APIRouter()
 
 class PhotoUpload(BaseModel):
-    image_url: str  # only field from client
-
+    image_url: str  
 @router.post("/photos/upload")
 def upload_photo(data: PhotoUpload):
-    # ✅ 4 spaces indentation inside function
+    
     image_uuid = str(uuid.uuid4())
     caption = generate_caption_and_store(data.image_url, image_uuid)
 
