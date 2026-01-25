@@ -15,7 +15,7 @@ if os.path.exists(INDEX_PATH):
 else:
     index = faiss.IndexFlatIP(DIMENSION)
 
-def add_vector(vector: np.ndarray, image_uuid: str, image_url: str, caption: str):
+def add_vector(vector: np.ndarray, image_uuid: str, image_url: str, caption: str, tags: list):
     # Normalize embedding for cosine similarity
     vector = vector / np.linalg.norm(vector)
     
@@ -30,7 +30,8 @@ def add_vector(vector: np.ndarray, image_uuid: str, image_url: str, caption: str
         faiss_id=faiss_id,
         image_path=image_url,
         image_url=image_url,
-        caption=caption
+        caption=caption,
+        tags=tags  # <-- NEW
     )
     session.add(photo)
     session.commit()
@@ -60,7 +61,9 @@ def search_vector(query_vector: np.ndarray, top_k=5, similarity_threshold=0.3):
                 "uuid": str(photo.uuid),
                 "image_url": photo.image_url,
                 "caption": photo.caption,
-                "similarity": float(sim)  # optional, useful for debugging
+                "tags": photo.tags,
+                "similarity": float(sim)
             })
+
     session.close()
     return results

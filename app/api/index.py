@@ -4,7 +4,6 @@ from app.services.captioning import generate_caption_and_store
 
 router = APIRouter()
 
-# route
 @router.post("/index-photo")
 async def index_photo(image: UploadFile = File(...)):
     if not image.content_type.startswith("image/"):
@@ -12,7 +11,7 @@ async def index_photo(image: UploadFile = File(...)):
 
     try:
         data = save_image(image)
-        caption = generate_caption_and_store(data["path"], data["uuid"])
+        result = generate_caption_and_store(data["path"], data["uuid"])
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -20,7 +19,8 @@ async def index_photo(image: UploadFile = File(...)):
         "message": "Image indexed successfully",
         "uuid": data["uuid"],
         "filename": data["filename"],
-        "caption": caption,
+        "caption": result["caption"],
+        "tags": result["tags"],
         "image_url": f"http://127.0.0.1:8000/static/images/{data['filename']}"
     }
 

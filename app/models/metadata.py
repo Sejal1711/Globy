@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, JSON
 from app.db.database import Base
 from datetime import datetime
 
@@ -11,4 +11,5 @@ class Photo(Base):
     image_path = Column(String, nullable=False)
     image_url = Column(String, nullable=False)
     caption = Column(String, nullable=False)
+    tags = Column(JSON, nullable=True)  # ✅ NEW FIELD
     created_at = Column(DateTime, default=datetime.utcnow)
