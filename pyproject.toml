@@ -1,0 +1,25 @@
+[project]
+name = "globy"
+version = "0.1.0"
+description = "AI image tagging and search backend"
+authors = [
+    {name = "Sejal1711", email = "sejalpawar1711@gmail.com"}
+]
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "python-multipart",
+    "pillow",
+    "torch",
+    "torchvision",
+    "transformers",
+    "sqlalchemy",
+    "psycopg2-binary",
+    "python-dotenv",
+    "sentence-transformers"
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
