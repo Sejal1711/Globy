@@ -7,17 +7,20 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "fastapi",
-    "uvicorn[standard]",
-    "python-multipart",
-    "pillow",
-    "torch",
-    "torchvision",
-    "transformers",
-    "sqlalchemy",
-    "psycopg2-binary",
-    "python-dotenv",
-    "sentence-transformers"
+    "fastapi>=0.103.0",
+    "uvicorn[standard]>=0.23.0",
+    "python-multipart>=0.0.6",
+    "pillow>=10.0.0",
+    "torch>=2.1.0",
+    "torchvision>=0.16.0",
+    "transformers>=4.40.0",
+    "sqlalchemy>=2.0.20",
+    "psycopg2-binary>=2.9.7",
+    "python-dotenv>=1.1.0",
+    "sentence-transformers>=2.2.2",
+    "requests>=2.32.0",
+    "numpy>=1.26.0",
+    "scipy>=1.12.0"
 ]
 
 [build-system]
