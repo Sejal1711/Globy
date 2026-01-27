@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from app.api import index, search, photos
+from app.api import index, search, photos,users 
 import uvicorn
 
 # --- FastAPI app ---
@@ -28,7 +28,7 @@ app.add_middleware(
 app.include_router(index.router, prefix="/api")
 app.include_router(search.router, prefix="/api")
 app.include_router(photos.router, prefix="/api")
-
+app.include_router(users.router, prefix="/api")
 # --- Health check ---
 @app.get("/")
 def health_check():
